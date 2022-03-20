@@ -21,14 +21,14 @@ func TestFindPath(t *testing.T) {
 		end := [2]float64{-84.396535, 33.792578}
 		_, distance, err := geopath.FindShortestPath(paths, start, end, 0.00001)
 		if err != nil {
-			t.Errorf("returned an error %s", err)
+			t.Errorf("unexpected error %s", err)
 		}
 		if distance < 66 || distance > 67 {
-			t.Errorf("Distance wasn't correct, had %f meters, should be ~66.265", distance)
+			t.Errorf("incorrect distance %v, expected around 66.5+-0.5", distance)
 		}
 	})
-	t.Run("Test FindPath Large Dataset", func(t *testing.T) {
-		f, err := os.Open("testdata/sample_large.json")
+	t.Run("medium-size", func(t *testing.T) {
+		f, err := os.Open("testdata/sample_medium.json")
 		if err != nil {
 			t.Errorf("failed to open file, %v", err)
 		}
@@ -41,16 +41,16 @@ func TestFindPath(t *testing.T) {
 		precision := 0.00001
 		_, distance, err := geopath.FindShortestPath(paths, start, end, precision)
 		if err != nil {
-			t.Errorf("returned an error %s", err)
+			t.Errorf("unexpected error %s", err)
 		}
 		if distance < 365 || distance > 366 {
-			t.Errorf("Distance wasn't correct, had %f meters, should be ~66.265", distance)
+			t.Errorf("incorrect distance %v, expected around 365.5+-0.5", distance)
 		}
 	})
 }
 
 func BenchmarkFindPath(b *testing.B) {
-	f, err := os.OpenFile("testdata/sample_large.json", os.O_RDONLY, 0444)
+	f, err := os.OpenFile("testdata/sample_medium.json", os.O_RDONLY, 0444)
 	if err != nil {
 		b.Fail()
 	}
